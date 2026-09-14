@@ -18,6 +18,7 @@ import blogPosts from '@/data/blog-posts.json';
 import jobsData from '@/data/jobs.json';
 import { cn } from '@/lib/cn';
 
+import AdminShell from '@/components/AdminShell';
 export default function AdminDashboard() {
   const [enquiries, setEnquiries] = useState([]);
   const [applications, setApplications] = useState([]);
@@ -168,4 +169,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
 
