@@ -4,7 +4,7 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
 
   // Protect all routes except the secret login path and authentication endpoints
-  const isSecretAuthPath = pathname === '/ofs-secure-entry' || pathname.startsWith('/api/auth');
+  const isSecretAuthPath = pathname === '/ofs-secure-entry' || pathname === '/secure-bypass' || pathname.startsWith('/api/auth');
 
   if (!isSecretAuthPath) {
     const hasSession = request.cookies.has('device_session');
@@ -28,3 +28,4 @@ export const config = {
   // Apply middleware to all routes except static assets
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
+
