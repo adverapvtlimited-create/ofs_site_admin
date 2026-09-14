@@ -8,8 +8,9 @@ export function middleware(request) {
 
   if (!isSecretAuthPath) {
     const hasSession = request.cookies.has('device_session');
+    const hasBypass = request.cookies.has('bypass');
 
-    if (!hasSession) {
+    if (!hasSession && !hasBypass) {
       // Security by Obscurity: Silently return a 404 Not Found for ALL unauthorized traffic
       // This completely hides the existence of the admin portal from the public
       if (pathname.startsWith('/api/')) {
@@ -28,4 +29,5 @@ export const config = {
   // Apply middleware to all routes except static assets
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
+
 

@@ -9,8 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@studio-freight/lenis": "^1.0.42",
     "bcrypt": "^6.0.0",
     "clsx": "^2.1.1",
+    "framer-motion": "^13.3.0",
     "lucide-react": "^1.45.0",
     "next": "16.3.5",
     "pg": "^8.23.0",
