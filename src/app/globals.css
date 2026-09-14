@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@config "./tailwind.config.js";
+@config "../../tailwind.config.js";
 @theme inline {
   --color-background: #F1F5F9;
   --color-foreground: #030712;
@@ -11,3 +11,4 @@ body {
   color: var(--color-foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
