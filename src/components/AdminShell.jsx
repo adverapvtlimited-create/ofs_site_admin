@@ -2,23 +2,38 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   MessageSquare,
   Briefcase,
   ArrowLeft,
+  Monitor,
+  LogOut,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 
 export default function AdminShell({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'RFQs & Enquiries', href: '/admin/enquiries', icon: MessageSquare },
-    { name: 'Job Applications', href: '/admin/careers', icon: Briefcase },
+    { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+    { name: 'RFQs & Enquiries', href: '/enquiries', icon: MessageSquare },
+    { name: 'Job Applications', href: '/careers', icon: Briefcase },
+    { name: 'Active Devices', href: '/devices', icon: Monitor },
   ];
+
+  const handleLogout = async () => {
+    if (!confirm('Are you sure you want to log out and revoke this device?')) return;
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/login');
+      router.refresh();
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-ofs-gray-100 flex flex-col">
@@ -28,13 +43,15 @@ export default function AdminShell({ children }) {
             <span className="bg-ofs-red-600 text-white py-0.5 px-2 rounded text-[0.7rem] sm:text-xs font-mono font-bold">
               CMS
             </span>
-            <span className="truncate">OFS GROUP INDIA — ADMIN</span>
+            <span className="truncate">OFS GROUP INDIA ?" ADMIN</span>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           <Link
-            href="/"
+            href="https://ofsgroupindia.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-white/75 text-xs font-mono hover:text-white transition-colors"
           >
             <ArrowLeft size={14} /> Back to Live Website
@@ -69,9 +86,18 @@ export default function AdminShell({ children }) {
             })}
           </div>
 
-          <div className="hidden md:block p-3.5 bg-ofs-navy-50/70 rounded text-xs text-ofs-navy-900 border border-ofs-navy-100 mt-4">
-            <div className="font-bold mb-0.5">OFS Enterprise CMS</div>
-            <div className="text-ofs-gray-600">v1.0.0 • Connected</div>
+          <div className="hidden md:flex flex-col gap-3 mt-4">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-3 py-2 text-xs sm:text-[0.85rem] font-semibold text-ofs-gray-700 hover:text-red-600 hover:bg-red-50 rounded transition-colors w-full"
+            >
+              <LogOut size={16} />
+              Revoke This Device
+            </button>
+            <div className="p-3.5 bg-ofs-navy-50/70 rounded text-xs text-ofs-navy-900 border border-ofs-navy-100">
+              <div className="font-bold mb-0.5">OFS Enterprise CMS</div>
+              <div className="text-ofs-gray-600">v1.0.0 ? Secure Mode</div>
+            </div>
           </div>
         </aside>
 
