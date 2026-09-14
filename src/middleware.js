@@ -3,20 +3,21 @@ import { NextResponse } from 'next/server';
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
-  // We only protect the root '/' and '/api' (except /api/auth)
-  const isProtectedPath = pathname === '/' || pathname.startsWith('/api/');
-  const isAuthPath = pathname.startsWith('/api/auth');
+  // Protect all routes except the secret login path and authentication endpoints
+  const isSecretAuthPath = pathname === '/ofs-secure-entry' || pathname.startsWith('/api/auth');
 
-  if (isProtectedPath && !isAuthPath) {
+  if (!isSecretAuthPath) {
     const hasSession = request.cookies.has('device_session');
 
     if (!hasSession) {
-      // Fast path: if the cookie isn't even present, immediately redirect to login.
-      // We don't bother hitting the database because we know it's unauthorized.
+      // Security by Obscurity: Silently return a 404 Not Found for ALL unauthorized traffic
+      // This completely hides the existence of the admin portal from the public
       if (pathname.startsWith('/api/')) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        return NextResponse.json({ error: 'Not Found' }, { status: 404 });
       }
-      return NextResponse.redirect(new URL('/login', request.url));
+      
+      // Rewrite the URL to a non-existent path to trigger Next.js default 404
+      return NextResponse.rewrite(new URL('/404', request.url));
     }
   }
 
